@@ -335,37 +335,102 @@
 
 # ------------------------------分治法（快速排序）------------------------------------
 # 快速排序----选择枢轴对元素进行划分，左边都比枢轴小，右边都比枢轴大
-class quickz(object):
 
-   def quick_sort(origin_items, comp=lambda x, y: x <= y):
-        items = origin_items[:]
-        _quick_sort(items, 0, len(items) - 1, comp)
-        print('item:%s' % items)
-        return items
 
-    def _quick_sort(items, start, end, comp):
-        if start < end:
-            pos = _partition(items, start, end, comp)
-            _quick_sort(items, start, pos - 1, comp)
-            _quick_sort(items, pos + 1, end, comp)
+#    def quick_sort(origin_items, comp=lambda x, y: x <= y):
+#         items = origin_items[:]
+#         _quick_sort(items, 0, len(items) - 1, comp)
+#         print('item:%s' % items)
+#         return items
 
-    def _partition(items, start, end, comp):
-        pivot = items[end]
-        i = start - 1
-        for j in range(start, end):
-            if comp(items[j], pivot):
-                i += 1
-                items[i], items[j] = items[j], items[i]
+#     def _quick_sort(items, start, end, comp):
+#         if start < end:
+#             pos = _partition(items, start, end, comp)
+#             _quick_sort(items, start, pos - 1, comp)
+#             _quick_sort(items, pos + 1, end, comp)
 
-        items[i + 1], items[end] = items[end], items[i + 1]
-        return i + 1
+#     def _partition(items, start, end, comp):
+#         pivot = items[end]
+#         i = start - 1
+#         for j in range(start, end):
+#             if comp(items[j], pivot):
+#                 i += 1
+#                 items[i], items[j] = items[j], items[i]
 
+#         items[i + 1], items[end] = items[end], items[i + 1]
+#         return i + 1
+
+#--------------------------------回溯法---------------------------------------------------
+#骑士巡逻 地柜回溯法，又称为试探法，按优选条件向前搜索，当搜索到某一步，发现原先选择并不优或者达不到目的的时候
+#就回退一步重新选择，比较经典的问题包括骑士巡逻，八皇后和迷宫寻路
+
+# import sys
+# import time
+
+# SIZE = 5
+# total = 0
+
+# def print_board(board):
+#     for row in board:
+#         for col in row:
+#             print(str(col).center(4),end='')
+
+# def patrol(board, row, col, step = 1):
+#     if row >= 0 and row < SIZE and \
+#         col >= 0 and col < SIZE and \
+#         board[row][col] == 0:
+
+#         board[row][col] = step
+#         if step == SIZE * SIZE:
+#             global total
+#             total += 1
+#             print(f'第{total}种走法')
+#             print_board(board)
+        
+#         patrol(board, row - 2, col - 1, step + 1)
+#         patrol(board, row - 1, col - 2, step + 1)
+#         patrol(board, row + 1, col - 2, step + 1)
+#         patrol(board, row + 2, col - 1, step + 1)
+#         patrol(board, row + 2, col + 1, step + 1)
+#         patrol(board, row + 1, col + 2, step + 1)
+#         patrol(board, row - 1, col + 2, step + 1)
+#         patrol(board, row - 2, col + 1, step + 1)
+#         board[row][col] =  0
+
+# def main():
+#     board = [[0] * SIZE for _ in range(SIZE)]
+#     print('board=: %s' % board)
+#     patrol(board, SIZE - 1, SIZE - 1)
+
+# if __name__ == "__main__":
+#     main()
+
+
+#---------------------------------动态规划-------------------------------------
+#动态规划---适用于有重叠问题和最优子结构性质的问题
+#使用动态规划方法所消耗时间往往小于朴素解法（用空间换取时间）
+
+def fib(num):
+    #递归计算函数
+    if num in (1,2):
+        return 1
+    
+    try:
+        return num
+    except KeyError:
+        num  = fib(num - 1) + fib(num - 2)
+        return num
 
 def main():
 
-    a = quickz()
-    a.quick_sort([1,,5,3,4], ,)
 
+    y = []
+
+    for i  in range(10):
+        
+        x =  fib(i)
+        y.append(x)
+        print(x)
 
 if __name__ == "__main__":
     main()
