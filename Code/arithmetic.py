@@ -410,27 +410,42 @@
 #动态规划---适用于有重叠问题和最优子结构性质的问题
 #使用动态规划方法所消耗时间往往小于朴素解法（用空间换取时间）
 
-def fib(num):
-    #递归计算函数
-    if num in (1,2):
-        return 1
+# def fib(num):
+#     #递归计算函数
+#     if num in (1,2):
+#         return 1
     
-    try:
-        return num
-    except KeyError:
-        num  = fib(num - 1) + fib(num - 2)
-        return num
+#     if
+    
+#         num  = fib(num - 1) + fib(num - 2)
+
+
+# def main():
+
+
+#     y = []
+
+#     for i  in range(10):
+        
+#         x =  fib(i)
+#         y.append(x)
+#         print(x)
+
+# if __name__ == "__main__":
+#     main()
+
+#--------示例2：子列表元素之和的最大值
 
 def main():
-
-
-    y = []
-
-    for i  in range(10):
-        
-        x =  fib(i)
-        y.append(x)
-        print(x)
-
+    items = list(map(int, input().split()))
+    print(items)
+    size = len(items)
+    overall,partial =  {}, {}
+    overall[size - 1] = partial[size - 1] = items[size - 1]
+    for i in range(size -2 , -1, -1):
+        partial[i] = max(items[i], partial[i + 1] + items[i])
+        overall[i] = max(partial[i], overall[i + 1])
+    print(overall[0])
 if __name__ == "__main__":
     main()
+
