@@ -71,23 +71,45 @@
 # 混入（Mixin）
 # 示例：自定义字典限制只有在指定的key不存在时才能在字典中设置键值对
 
-class SetOnceMappingMixin():
-    #自定义混入类
-    __slots__ = ()
+# class SetOnceMappingMixin():
+#     #自定义混入类
+#     __slots__ = ()
 
-    def __setitem__(self, key, value):
-        if key in self:
-            raise KeyError(str(key) + ' already set')
-        return super().__setitem__(key,value)
+#     def __setitem__(self, key, value):
+#         if key in self:
+#             raise KeyError(str(key) + ' already set')
+#         return super().__setitem__(key,value)
 
-class SetOnceDict(SetOnceMappingMixin, dict):
-    #自定义字典
+# class SetOnceDict(SetOnceMappingMixin, dict):
+#     #自定义字典
+#     pass
+
+# my_dict = SetOnceDict()
+# try:
+#     my_dict['username'] = 'Jason'
+#     my_dict['username'] = 'Bron'
+# except KeyError:
+#     pass
+# print(my_dict)
+
+#------元编程和元类-------------
+
+#用元类实现单例模式
+import threading
+
+class SingletonMeta(type):
+    #自定义元类
+    def __init__(cls, *args, **kwargs):
+        cls.__instance = None
+        cls.__lock  =threading.Lock()
+        super().__init__(*args, **kwargs)
+    
+    def __call__(cls, *args, **kwargs):
+        if cls.__instance is None:
+            with cls.__lock:
+                if cls.__instance is None:
+                    cls.__instance = super().__call__(*args, **kwargs)
+        return cls.__instance
+
+class Present(metaclass = SingletonMeta):
     pass
-
-my_dict = SetOnceDict()
-try:
-    my_dict['username'] = 'Jason'
-    my_dict['username'] = 'Bron'
-except KeyError:
-    pass
-print(my_dict)
