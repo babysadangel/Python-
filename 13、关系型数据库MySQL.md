@@ -248,7 +248,98 @@
 	
 	-- 查询男女学生人数（分组和聚合函数）
 	select if(stusex, '男', '女') as 性别, count(stussex) as 人数
+	from tb_student group by stusex order by 人数 desc;
 	
+	-- 查询序号为1001的学生所以课程的总成绩（筛选和聚合函数）
+	select sum(score) as 总成绩 from tb_score where sid=1001;
+ 	
+ 	-- 查询每个学生的学号和评价成绩（分组和聚合函数）
+ 	select sid as 学号, avg(score) as 平均分 from tb_score
+ 	where score is not null
+ 	group by sid 
+ 	order by 平均分 desc;
+ 	
+ 	
+ 	-- 查询平均成绩大于等于80分的学生的学号和平均成绩（分组后的筛选）
+ 	select sid as 学号, avg(score) as 平均分 from tb_score
+ 	group by sid having 平均分>=80
+ 	order by 平均分 desc;
+ 	
+ 	-- 查询年龄最大的学生的姓名（子查询）
+ 	select stuname from tb_student
+ 	where stubirth=(select min(stubirth) from tb_student)
+ 	
+ 	-- 查询选了三门课以及以上的课程的学生的姓名（子查询/ 分组条件/ 集合运算）
+ 	select stuname from tb_student where stuid in 
+ 	(select sid from tb_score group by sid having count(sid)>=3);
+ 	
+ 	-- 查询课程名称、学分、授课老师名字和职称
+ 	select cname ,ccredit, tname, ttitle
+ 	from tb_course,tb_teacher
+ 	where tid=teacherid;
+ 	
+ 	select cname, ccredit, tname, ttitle, from tb_score
+ 	inner join tb_teacher on tid=teacherid;
+ 	
+ 	
+ 	-- 查询学生姓名和所在学院
+ 	select stuname, collname
+ 	from tb_student t1, tb_college t2
+ 	where t1.collid=t2.collid;
+ 	
+ 	select stuname ,collname from tb_student t1
+ 	inner join tb_college t2 on t1.collid=t2.collid;
+ 	
+ 	-- 查询学生姓名、课程名称、考试成绩
+ 	select stuname , cname , score
+ 	from tb_student, tb_course, tb_score
+ 	where stuid=sid and couseid=cid
+ 	where socre is not null;
+ 	
+ 	select stuname, cname, score from tb_student 
+ 	inner join tb_score on stuid=sid
+ 	inner join tb_course on courseid=cid
+ 	where socre is not null;
+ 	
+ 	-- 查询选课学生的姓名和平均成绩（子查询，链接查询）
+ 	select stuname, avgscore from tb_student
+ 	(select sid , avg(score) as avgscore from tb_score group by sid)
+ 	temp where sid=stuid;
+ 	
+ 	select stuname ,avgscore from tb_student
+ 	inner join (select sid, avg(score)) as avgscore
+ 	from tb_score group by sid) temp on sid=stuid;
+ 	
+ 	-- 查询每个学生的姓名和选课数量（左外链接和子查询）
+ 	select stuname as 姓名, ifnull(total, 0) as 选课数量
+ 	from tb_student left outer join (select sid, count(sid) as total 
+ 	from tb_score group by sid) temp on stuid=sid;
  	
 	```
-			
+4. DCL (Data Control Language) 资料控制语言
+
+	```
+	-- 创建名为HelloKitty的用户
+	create user 'helloKitty'@'localhost' identified by '123123'
+	
+	-- 将对SRS数据库所有对象的所有操作权限授予HelloKitty
+	grant all privileges on SRS.* to 'helloKitty'@'localhost'
+	
+	-- 召回HelloKitty对SRS数据库所有对象的insert/ delete / update权限
+	revoke insert, delete ,update on SRS.* from 'helloKitty'@'localhost'
+
+	
+	```		
+	
+## 相关知识
+
+####数据完整性
+1. 实体完整性 -- 每个实体都是独一无二的
+	* 主键/  唯一约束 / 唯一索引
+2. 引用完整性（参考完整性）
+	* 外键
+3. 域完整性 -- 数据是有效的
+	* 数据类型
+	* 非空约束
+	* 默认值约束
+	* 检查约束
